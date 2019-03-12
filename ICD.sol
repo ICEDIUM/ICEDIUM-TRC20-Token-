@@ -1,5 +1,6 @@
 pragma solidity ^0.4.23;
 
+
 // ----------------------------------------------------------------------------
 // ICEDIUM TRC20 Token
 //
@@ -9,7 +10,7 @@ pragma solidity ^0.4.23;
 // Total supply   : 300 000 000 000
 // Decimals       : 18
 //
-// (c) by ICEDIUM GROUP
+// (c) by ICEDIUM GROUP 2019
 // ----------------------------------------------------------------------------
 
 contract ERC20Interface {
@@ -25,7 +26,7 @@ contract ERC20Interface {
     // ------------------------------------------------------------------------
     // TRC20 Token, with the addition of symbol, name and decimals supply and founder
     // ------------------------------------------------------------------------
-contract icedium is ERC20Interface{
+contract ICEDIUM is ERC20Interface{
     string public name = "ICEDIUM";
     string public symbol = "ICD";
     uint8 public decimals = 18;
@@ -57,8 +58,6 @@ contract icedium is ERC20Interface{
     // from the token owner's account
     // ------------------------------------------------------------------------
     function approve(address spender, uint tokens) public returns(bool){
-        require(balances[msg.sender] >= tokens);
-        require(tokens > 0);
         allowed[msg.sender][spender] = tokens;
         emit Approval(msg.sender, spender, tokens);
         return true;
@@ -67,11 +66,15 @@ contract icedium is ERC20Interface{
     //  Transfer tokens from the 'from' account to the 'to' account
     // ------------------------------------------------------------------------
     function transferFrom(address from, address to, uint tokens) public returns(bool){
-        require(allowed[from][to] >= tokens);
+        require(allowed[from][msg.sender] >= tokens);
         require(balances[from] >= tokens);
+
         balances[from] -= tokens;
         balances[to] += tokens;
-        allowed[from][to] -= tokens;
+        allowed[from][msg.sender] -= tokens;
+
+        emit Transfer(from, to, tokens);
+
         return true;
     }
     // ------------------------------------------------------------------------
